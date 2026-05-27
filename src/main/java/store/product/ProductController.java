@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface ProductController {
 
     @PostMapping("/products")
-    public ResponseEntity<ProductOut> create(
+    public ResponseEntity<Void> create(
         @RequestBody ProductIn in
     );
 
@@ -31,4 +31,6 @@ public interface ProductController {
         @PathVariable String id
     );
     
+    @GetMapping("/products/health-check")
+    public ResponseEntity<Void> healthCheck();
 }
