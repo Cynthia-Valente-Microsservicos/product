@@ -39,7 +39,7 @@ public interface ProductController {
     public ResponseEntity<Void> healthCheck();
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductOut>> findAll(
+    public ResponseEntity<List<ProductOut>> findAllByName(
         @RequestParam(value = "name", required = false) String name
     );
 }
