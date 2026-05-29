@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name = "product", url = "http://product:8080")
 public interface ProductController {
 
     @PostMapping("/products")
     public ResponseEntity<Void> create(
-        @RequestBody ProductIn in
+        @RequestBody ProductIn in,
+        @RequestHeader("role") String role
     );
 
     @GetMapping("/products")
@@ -28,7 +30,8 @@ public interface ProductController {
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> delete(
-        @PathVariable String id
+        @PathVariable String id,
+        @RequestHeader("role") String role
     );
     
     @GetMapping("/products/health-check")
