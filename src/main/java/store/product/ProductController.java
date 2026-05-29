@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "product", url = "http://product:8080")
 public interface ProductController {
@@ -36,4 +37,9 @@ public interface ProductController {
     
     @GetMapping("/products/health-check")
     public ResponseEntity<Void> healthCheck();
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductOut>> findAll(
+        @RequestParam(value = "name", required = false) String name
+    );
 }
