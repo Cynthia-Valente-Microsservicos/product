@@ -1,7 +1,6 @@
 package store.product;
 
 import java.util.List;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,25 +20,23 @@ public interface ProductController {
         @RequestHeader("role") String role
     );
 
+    // Unificado: Trata tanto a listagem geral quanto o filtro por LIKE
     @GetMapping("/products")
-    public ResponseEntity<List<ProductOut>> findAll();
+    public ResponseEntity<List<ProductOut>> findAll(
+        @RequestParam(value = "name", required = false) String name
+    );
     
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductOut> findById(
-        @PathVariable String id
+        @PathVariable("id") String id
     );
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> delete(
-        @PathVariable String id,
+        @PathVariable("id") String id,
         @RequestHeader("role") String role
     );
     
     @GetMapping("/products/health-check")
     public ResponseEntity<Void> healthCheck();
-
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductOut>> findAllByName(
-        @RequestParam(value = "name", required = false) String name
-    );
 }
