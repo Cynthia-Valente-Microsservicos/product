@@ -20,11 +20,8 @@ public interface ProductController {
         @RequestHeader("role") String role
     );
 
-    // Unificado: Trata tanto a listagem geral quanto o filtro por LIKE
     @GetMapping("/products")
-    public ResponseEntity<List<ProductOut>> findAll(
-        @RequestParam(value = "name", required = false) String name
-    );
+    public ResponseEntity<List<ProductOut>> findAll();
     
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductOut> findById(
@@ -39,4 +36,9 @@ public interface ProductController {
     
     @GetMapping("/products/health-check")
     public ResponseEntity<Void> healthCheck();
+
+    @GetMapping("/products/search")
+    public ResponseEntity<List<ProductOut>> findAllByName(
+        @RequestParam(value = "name", required = false) String name
+    );
 }
