@@ -1,4 +1,4 @@
-# product
+# Product
 
 Módulo compartilhado que define a interface do microsserviço de produtos. Contém os DTOs (`ProductIn`, `ProductOut`) e o cliente Feign (`ProductController`) usados por outros serviços para se comunicar com o `product-service`.
 
@@ -23,6 +23,8 @@ api/product-service  ← implementação real do serviço
 
 ## DTOs
 
+Ambos os DTOs são `record` Java com `@Builder` do Lombok.
+
 ### `ProductIn` — corpo da requisição de criação
 
 | Campo   | Tipo     | Descrição                      |
@@ -32,11 +34,11 @@ api/product-service  ← implementação real do serviço
 | `unit`  | `String` | Unidade de medida (ex: kg, un) |
 
 ```java
-ProductIn.builder()
-    .name("Arroz")
-    .price(5.99f)
-    .unit("kg")
-    .build();
+// via construtor canônico do record
+new ProductIn("Arroz", 5.99f, "kg");
+
+// via builder (Lombok @Builder)
+ProductIn.builder().name("Arroz").price(5.99f).unit("kg").build();
 ```
 
 ### `ProductOut` — corpo da resposta
@@ -52,13 +54,14 @@ ProductIn.builder()
 
 Cliente Feign apontando para `http://product:8080`. Para usar em outro serviço, habilite com `@EnableFeignClients` e injete a interface normalmente.
 
-| Método   | Path                     | Header obrigatório | Corpo       | Resposta            |
-|----------|--------------------------|--------------------|-------------|---------------------|
-| `POST`   | `/products`              | `role: ADMIN`      | `ProductIn` | `201 Created`       |
-| `GET`    | `/products`              | —                  | —           | `List<ProductOut>`  |
-| `GET`    | `/products/{id}`         | —                  | —           | `ProductOut`        |
-| `DELETE` | `/products/{id}`         | `role: ADMIN`      | —           | `204 No Content`    |
-| `GET`    | `/products/health-check` | —                  | —           | `200 OK`            |
+| Método   | Path                     | Header obrigatório | Query      | Corpo       | Resposta            |
+|----------|--------------------------|--------------------|------------|-------------|---------------------|
+| `POST`   | `/products`              | `role: ADMIN`      | —          | `ProductIn` | `201 Created`       |
+| `GET`    | `/products`              | —                  | —          | —           | `List<ProductOut>`  |
+| `GET`    | `/products/{id}`         | —                  | —          | —           | `ProductOut`        |
+| `GET`    | `/products/search`       | —                  | `name`     | —           | `List<ProductOut>`  |
+| `DELETE` | `/products/{id}`         | `role: ADMIN`      | —          | —           | `204 No Content`    |
+| `GET`    | `/products/health-check` | —                  | —          | —           | `200 OK`            |
 
 > Os endpoints de escrita exigem o header `role: ADMIN`. Sem ele o serviço retorna `403 Forbidden`.
 
